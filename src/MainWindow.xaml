@@ -1,0 +1,139 @@
+<Window x:Class="VoxRig.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:VoxRig"
+        Title="VoxRig 1.0" Icon="pack://application:,,,/VoxRig.ico" Width="1340" Height="940" MinWidth="980" MinHeight="660"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BgBrush}" Foreground="{StaticResource TextBrush}">
+    <Grid Background="{StaticResource BgBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0" Margin="20,14,20,10">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="GlitchBtn" Content="GLITCH NOW"
+                        ToolTip="Fire one random mic glitch (Ctrl+Alt+G)"/>
+                <ToggleButton x:Name="MuteToggle" Content="MUTE"
+                              ToolTip="Silence the output (Ctrl+Alt+M)"/>
+                <ToggleButton x:Name="FxToggle" Content="FX ON" MinWidth="140"
+                              IsChecked="True" ToolTip="Turn every filter on or off at once (Ctrl+Alt+B)"/>
+                <Button x:Name="StartBtn" Content="START" MinWidth="120"/>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="VOXRIG" FontSize="28" FontWeight="Black"/>
+                <TextBlock Text="Live mic effects rack, straight into your virtual cable"
+                           Foreground="{StaticResource MutedBrush}" FontSize="12"/>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Devices and levels -->
+        <Border Grid.Row="1" Margin="20,0,20,10" Padding="16,12" CornerRadius="10"
+                Background="{StaticResource PanelBrush}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="170"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Style="{StaticResource Caption}" Text="INPUT  (your mic)"/>
+                    <ComboBox x:Name="InputBox" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Style="{StaticResource Caption}" Text="OUTPUT  (virtual cable, e.g. CABLE Input)"/>
+                    <ComboBox x:Name="OutputBox" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+                <StackPanel Grid.Column="4">
+                    <TextBlock Style="{StaticResource Caption}" Text="MONITOR  (hear yourself in headphones)"/>
+                    <DockPanel>
+                        <CheckBox x:Name="MonitorCheck" DockPanel.Dock="Left" MinWidth="0" Margin="0,0,6,0"
+                                  VerticalAlignment="Center" ToolTip="Monitor on/off"/>
+                        <ComboBox x:Name="MonitorBox" HorizontalAlignment="Stretch"/>
+                    </DockPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="6">
+                    <TextBlock Style="{StaticResource Caption}" Text="LATENCY"/>
+                    <ComboBox x:Name="LatencyBox" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="10 ms  (ultra)" Tag="10"/>
+                        <ComboBoxItem Content="20 ms  (low)" Tag="20"/>
+                        <ComboBoxItem Content="40 ms  (safe)" Tag="40"/>
+                        <ComboBoxItem Content="80 ms  (rock solid)" Tag="80"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,10,0,0">
+                    <DockPanel>
+                        <TextBlock x:Name="InGainText" DockPanel.Dock="Right" Style="{StaticResource Caption}"/>
+                        <TextBlock Style="{StaticResource Caption}" Text="MIC GAIN"/>
+                    </DockPanel>
+                    <Slider x:Name="InGain" Minimum="-24" Maximum="24" Value="0"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,10,0,0">
+                    <DockPanel>
+                        <TextBlock x:Name="OutGainText" DockPanel.Dock="Right" Style="{StaticResource Caption}"/>
+                        <TextBlock Style="{StaticResource Caption}" Text="OUTPUT VOLUME"/>
+                    </DockPanel>
+                    <Slider x:Name="OutGain" Minimum="-30" Maximum="12" Value="0"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="4" Margin="0,10,0,0">
+                    <DockPanel>
+                        <TextBlock x:Name="MonGainText" DockPanel.Dock="Right" Style="{StaticResource Caption}"/>
+                        <TextBlock Style="{StaticResource Caption}" Text="MONITOR VOLUME"/>
+                    </DockPanel>
+                    <Slider x:Name="MonGain" Minimum="-40" Maximum="6" Value="-6"/>
+                </StackPanel>
+                <Button x:Name="RefreshBtn" Grid.Row="1" Grid.Column="6" Content="Refresh devices"
+                        HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="0,10,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Live visualizer -->
+        <Border Grid.Row="2" Margin="20,0,20,10" CornerRadius="10" ClipToBounds="True"
+                BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+            <local:Visualizer x:Name="Viz"/>
+        </Border>
+
+        <!-- Presets -->
+        <DockPanel Grid.Row="3" Margin="20,0,20,8">
+            <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}" FontSize="11"
+                       Text="Hotkeys work anywhere:  Ctrl+Alt+B  FX on/off    Ctrl+Alt+M  mute    Ctrl+Alt+G  glitch"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="PRESET" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <ComboBox x:Name="PresetBox" Width="240"/>
+                <TextBox x:Name="PresetName" Width="170" Margin="16,0,0,0" ToolTip="Name for your preset"/>
+                <Button x:Name="SavePresetBtn" Content="Save preset" Margin="8,0,0,0"/>
+                <Button x:Name="DeletePresetBtn" Content="Delete" Margin="8,0,0,0"/>
+                <Button x:Name="AllOffBtn" Content="All filters off" Margin="8,0,0,0"/>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Effect cards -->
+        <ScrollViewer Grid.Row="4" Margin="14,0,8,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <WrapPanel x:Name="FxPanel" Margin="0,0,0,12"/>
+        </ScrollViewer>
+
+        <!-- Status -->
+        <Border Grid.Row="5" Background="{StaticResource PanelBrush}" Padding="20,7">
+            <DockPanel>
+                <TextBlock x:Name="LatencyText" DockPanel.Dock="Right" Foreground="{StaticResource MutedBrush}" FontSize="12"/>
+                <TextBlock x:Name="StatusText" FontSize="12" TextTrimming="CharacterEllipsis"/>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>
